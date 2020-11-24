@@ -1,3 +1,4 @@
 anki_cli_unofficial.egg-info/
 /build/
 /dist/
+__pycache__/

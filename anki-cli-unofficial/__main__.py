@@ -1,17 +1,17 @@
 import os
-import platform
-from pathlib import Path
 import argparse
+import platform
+import sys
+from pathlib import Path
 
-import loader
+from . import loader
 
 try:
-  from anki.storage import Collection
+  import anki
 except ImportError:
   raise RuntimeError("Python anki package is not installed. Please run:\n\t$ pip3 install anki==<your_version>")
 
-
-def anki_home_default():
+def get_anki_home_default():
   # Anki home directory depends on the platform
   # See https://docs.ankiweb.net/#/files?id=file-locations
   plt = platform.system()
@@ -34,41 +34,49 @@ def anki_home_default():
   return directory
 
 
-def open_anki():
-  # Find our Anki application
-  anki_home = anki_home_default()
-  # Note 1: Relative paths are not supported
-  anki_collection_path = os.path.join(anki_home, "collection.anki2")
-
-  col = Collection(anki_collection_path, log=True)
-
-  # Find the model to use (Basic, Basic with reversed, ...)
-  modelBasic = col.models.byName('Basic')
-  # Set the deck
-  deck = col.decks.byName('Default')
-  col.decks.select(deck['id'])
-  col.decks.current()['mid'] = modelBasic['id']
-
-  # note = col.newNote()
-  # note.fields[0] = "Bonjour" # The Front input field in the UI
-  # note.fields[1] = "Hello"   # The Back input field in the UI
-  # col.addNote(note)
-
-  col.save()
-
-def main():
-
-  open_anki()
-
 if __name__ == "__main__":
+
   parser = argparse.ArgumentParser()
   subparsers = parser.add_subparsers(title='subcommands',
                                      description='valid subcommands',
                                      help='additional help')
   import_parser = subparsers.add_parser('load')
+  import_parser.add_argument('--anki-home', default="~/AnkiTest/User 1", help="Anki directory")
+  import_parser.add_argument('--media-dir', default=".", help="path to directory containing medias references in input file")
   import_parser.add_argument('--deck', default="Default", help="deck name in which to create flashcards")
   import_parser.add_argument('input', help="file containing the flashcards to create")
   args = parser.parse_args()
 
-  loader.load(args.input, args.deck)
+  # Check the Anki home path exists
+  anki_home_normalized = os.path.normpath(os.path.expanduser(args.anki_home))
+  if not os.path.isdir(anki_home_normalized):
+    print(anki_home_normalized)
+    print("❌ Anki directory %s doesn't exist." % args.anki_home)
+    print("👋 Exiting...")
+    sys.exit(1)
+  # Check the medias directory exists
+  media_dir_normalized = os.path.normpath(os.path.expanduser(args.media_dir))
+  if not os.path.isdir(media_dir_normalized):
+    print("❌ Media directory %s doesn't exist." % args.media_dir)
+    print("👋 Exiting...")
+    sys.exit(1)
+
+  # Check the input file exists
+  if not os.path.isfile(args.input):
+    print("❌ Input file %s doesn't exist." % args.input)
+    print("👋 Exiting...")
+    sys.exit(1)
+
+  anki_home_default = get_anki_home_default()
+  anki_home_default_normalized = os.path.realpath(anki_home_default)
+  if anki_home_normalized == anki_home_default_normalized:
+    # Ask confirmation before continuing
+    print("🔥🔥🔥 You are using your current Anki collection. This is NOT recommended. Bugs happens 🐛🐛🐛. ")
+    answer = input("Continue? (yes/no): ")
+    if answer != "yes":
+      print("👋 Exiting...")
+      sys.exit(0)
+
+  loader.load(anki_home_normalized, media_dir_normalized, args.input, args.deck)
+  print("👍 Done")
 
