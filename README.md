@@ -25,3 +25,15 @@ $ python3 setup.py install # The binary anki-cli-unofficial is present in $PATH
 $ cd
 $ anki-cli-unofficial load --media-dir $PWD/Workshop/anki-cli/examples $PWD/Workshop/anki-cli/examples/french.yaml
 ```
+
+## Uploading to Pypi
+
+1. Create an API Token from the Web UI. (Edit your `~/.pypirc` with the generated token.)
+2. Install Twine
+```
+$ python3 -m pip install --user --upgrade twine
+```
+3. Upload the bundle
+```
+$ python3 -m twine upload dist/*
+```
