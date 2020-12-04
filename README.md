@@ -4,6 +4,8 @@ CLI to automate Anki notes/flashcards creation.
 
 **This project is not part of the official Anki project.**
 
+Note: The code was tested using Python 3.8 and Anki 2.1.35.
+
 ## Installation
 
 ```shell
@@ -16,7 +18,7 @@ The CLI supports a single command `load`.
 
 ```shell
 $ anki-cli-unofficial load -h
-usage: __main__.py load [-h] [--anki-dir ANKI_DIR] [--media-dir MEDIA_DIR] [--deck DECK] input_file output_file
+usage: anki-cli-unofficial load [-h] [--anki-dir ANKI_DIR] [--media-dir MEDIA_DIR] [--deck DECK] input_file output_file
 
 positional arguments:
   input_file            YAML file containing the flashcards to create
@@ -55,8 +57,8 @@ To generate the flashcards:
 ```shell
 $ anki-cli-unofficial load cards.yaml archive.apkg
 
-🔍 Loading 'cards.yaml' into the deck 'Default'...
 📂 Opening Anki collection...
+🔍 Loading 'cards.yaml' into the deck 'Default'...
 💾 Saving Anki collection...
 👍 Done
 👉 Anki collection can be opened using the following command:

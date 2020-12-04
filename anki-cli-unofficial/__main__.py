@@ -49,7 +49,7 @@ def get_anki_command():
 
 if __name__ == "__main__":
 
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(prog='anki-cli-unofficial')
   subparsers = parser.add_subparsers(title='subcommands',
                                      description='valid subcommands',
                                      help='additional help')
