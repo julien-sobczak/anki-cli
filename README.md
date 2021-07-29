@@ -127,7 +127,10 @@ When running on an existing Anki directory, the CLI doesn't create the package f
 
 You will find additional examples in the directory `examples/`.
 
-## Test locally (for developers)
+
+## Development
+
+### Test locally
 
 ```shell
 $ cd anki-cli/
@@ -135,7 +138,7 @@ $ python3 setup.py install # The binary anki-cli-unofficial is now present in $P
 $ anki-cli-unofficial load --media-dir ./examples ./examples/french.yaml archive.apkg
 ```
 
-## Uploading to PyPI (for developers)
+### Upload to PyPI
 
 1. Create an API Token from the Web UI. (Edit your `~/.pypirc` with the generated token.)
 2. Install Twine
@@ -148,3 +151,10 @@ $ python3 -m twine upload dist/*
 ```
 
 Note: The upload to PyPI is currently assured by GitHub Actions.
+
+
+### Release
+
+1. Increase the version number in `setup.py`.
+2. Commit and push.
+3. Create a new tag in GitHub to trigger the CI pipeline.
