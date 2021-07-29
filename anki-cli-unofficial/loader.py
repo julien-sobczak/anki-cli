@@ -38,7 +38,7 @@ class Loader:
     print("📂 Opening Anki collection...")
     self.col = Collection(anki_collection_path, log=True)
 
-  def _add_note(self, entry):
+  def _add_note(self, entry, deck_id):
     model_name = entry['type']
     model = self.col.models.byName(model_name)
     self.col.decks.current()['mid'] = model['id']
@@ -69,20 +69,20 @@ class Loader:
     if entry['tags']:
       note.tags = self.col.tags.canonify(entry['tags'])
 
-    self.col.addNote(note)
+    self.col.add_note(note, deck_id)
 
 
-  def load(self, cards, deck="Defaut"):
-    print("🔍 Loading notes into the deck '%s'..." % deck)
+  def load(self, cards, deck_name="Defaut"):
+    print("🔍 Loading notes into the deck '%s'..." % deck_name)
 
     # Set the deck
-    deck = self.col.decks.byName(deck)
+    deck = self.col.decks.byName(deck_name)
     if not deck:
-      raise RuntimeError("👀 No deck named %s found." % deck)
-    self.col.decks.select(deck['id'])
+      raise RuntimeError("👀 No deck named %s found." % deck_name)
+    deck_id = deck['id']
 
     for entry in cards:
-      self._add_note(entry)
+      self._add_note(entry, deck_id)
 
     # Save the collection
     print("💾 Saving Anki collection...")

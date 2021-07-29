@@ -29,9 +29,6 @@ def get_anki_dir_default():
   if not directory:
     raise RuntimeError("❌ Failed to detect your OS. Only Windows/Linux/MacOS are supported.")
 
-  if not os.path.isdir(directory):
-    raise RuntimeError("❌ Failed to find your Anki home directory: %s" % directory)
-
   return directory
 
 def get_anki_command():
@@ -54,12 +51,14 @@ if __name__ == "__main__":
                                      description='valid subcommands',
                                      help='additional help')
   import_parser = subparsers.add_parser('load')
-  import_parser.add_argument('--anki-dir', default=None, help="Anki user directory (Default to a temp directory)")
+  import_parser.add_argument('--anki-dir', default=None, nargs="+", help="Anki user directory (Default to a temp directory)")
   import_parser.add_argument('--media-dir', default=".", help="local directory containing medias referenced in input_file")
   import_parser.add_argument('--deck', default="Default", help="deck name in which to create flashcards")
   import_parser.add_argument('input_file', help="file containing the flashcards to create")
   import_parser.add_argument('output_file', help="Anki generated archive filepath")
   args = parser.parse_args()
+
+  print("ic", args)
 
   # Check the input file exists
   if not os.path.isfile(args.input_file):
@@ -89,7 +88,7 @@ if __name__ == "__main__":
   else:
     anki_dir_new = False
     # Path is provided. We expect the directory to exist.
-    anki_dir = os.path.normpath(os.path.expanduser(args.anki_dir))
+    anki_dir = os.path.normpath(os.path.expanduser(' '.join(args.anki_dir)))
     if not os.path.isdir(anki_dir):
       print("❌ Anki directory %s doesn't exist." % anki_dir)
       print("👋 Exiting...")
@@ -117,15 +116,21 @@ if __name__ == "__main__":
   print("👍 Done")
   print("👉 Anki collection can be opened using the following command:\n\t%s -b %s" % (get_anki_command(), anki_path.parent))
 
-  if anki_dir_new:
-    archive_file = os.path.join(os.getcwd(), args.output_file)
-    # Check the archive doesn't exist
-    if os.path.isfile(archive_file):
-      answer = input("🧨 Archive file %s already exists. Override (yes/no)? " % archive_file)
-      if answer != 'yes':
+  if not anki_dir_new:
+    answer = input("🔥 You are working on an existing collection. Exporting it could take a long time. Continue (yes/no)? ")
+    if answer != 'yes':
         print("🙊 Skipped the archive file generation")
         print("👋 Exiting...")
         sys.exit(0)
 
-    loader.export(archive_file)
-    print("👉 Anki Archive is available here: %s" % archive_file)
+  archive_file = os.path.join(os.getcwd(), args.output_file)
+  # Check the archive doesn't exist
+  if os.path.isfile(archive_file):
+    answer = input("🧨 Archive file %s already exists. Override (yes/no)? " % archive_file)
+    if answer != 'yes':
+      print("🙊 Skipped the archive file generation")
+      print("👋 Exiting...")
+      sys.exit(0)
+      
+  loader.export(archive_file)
+  print("👉 Anki Archive is available here: %s" % archive_file)
