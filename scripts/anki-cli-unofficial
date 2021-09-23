@@ -1,8 +1,5 @@
-#!/usr/bin/env bash
-# Based on https://stackoverflow.com/a/56534786
+#!/usr/bin/env python
+# See https://python-packaging.readthedocs.io/en/latest/command-line-scripts.html
 
-if [[ ! $@ ]]; then
-    python3 -m anki-cli-unofficial -h
-else
-    python3 -m anki-cli-unofficial $@
-fi
+from ankicli import cli
+cli.main()
