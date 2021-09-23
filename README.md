@@ -9,6 +9,7 @@ Note: The code was tested using Python 3.8 and Anki 2.1.35.
 ## Installation
 
 ```shell
+$ pip3 install aqt==2.1.44 # Must be compatible with your Anki desktop installation
 $ pip3 install anki-cli-unofficial
 ```
 

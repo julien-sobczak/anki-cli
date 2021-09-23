@@ -44,8 +44,7 @@ def get_anki_command():
   else:
     raise RuntimeError("❌ Failed to detect your OS. Only Windows/Linux/MacOS are supported.")
 
-if __name__ == "__main__":
-
+def main():
   parser = argparse.ArgumentParser(prog='anki-cli-unofficial')
   subparsers = parser.add_subparsers(title='subcommands',
                                      description='valid subcommands',
@@ -58,7 +57,6 @@ if __name__ == "__main__":
   import_parser.add_argument('output_file', help="Anki generated archive filepath")
   args = parser.parse_args()
 
-  print("ic", args)
 
   # Check the input file exists
   if not os.path.isfile(args.input_file):
@@ -131,6 +129,6 @@ if __name__ == "__main__":
       print("🙊 Skipped the archive file generation")
       print("👋 Exiting...")
       sys.exit(0)
-      
+
   loader.export(archive_file)
   print("👉 Anki Archive is available here: %s" % archive_file)
