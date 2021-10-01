@@ -20,11 +20,11 @@ def get_anki_dir_default():
 
   directory = None
   if plt == "Windows":
-    directory = os.path.join(os.getenv('APPDATA'), 'Anki2/User 1')
+    directory = os.path.join(os.getenv('APPDATA'), 'Anki2')
   elif plt == "Linux":
-    directory = os.path.join(home, '.local/share/Anki2/User 1')
+    directory = os.path.join(home, '.local/share/Anki2')
   elif plt == "Darwin":
-    directory = os.path.join(home, 'Library/Application Support/Anki2/User 1')
+    directory = os.path.join(home, 'Library/Application Support/Anki2')
 
   if not directory:
     raise RuntimeError("❌ Failed to detect your OS. Only Windows/Linux/MacOS are supported.")
@@ -100,7 +100,7 @@ def main():
       sys.exit(1)
 
     anki_dir_default = os.path.realpath(get_anki_dir_default())
-    if anki_dir == anki_dir_default:
+    if anki_dir.startswith(anki_dir_default):
       # Ask confirmation before continuing
       print("🔥🔥🔥 You are using your current Anki collection. This is NOT recommended. Bugs happens 🐛🐛🐛.")
       answer = input("Continue? (yes/no): ")
