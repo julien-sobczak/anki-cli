@@ -1,0 +1,22 @@
+# An example using only text
+- type: Basique
+  tags: [idiom]
+  fields:
+    Recto: 'Avoir la banane! <small>idiom</small>'
+    Verso: 'To feel great. (literally: <em>to have the banana<em>)'
+
+# An example playing a sound when the back card is displayed
+- type: Basique
+  tags: [word]
+  fields:
+    Recto: 'Bonjour <small>interj.</small>'
+    Verso: >
+      [sound:bonjour.mp3]
+      Hello <small>interj.</small>
+
+# An example using a picture
+- type: Basique
+  tags: [word]
+  fields:
+    Recto: '<img src="car.jpg" />'
+    Verso: Voiture <small>n.</small>

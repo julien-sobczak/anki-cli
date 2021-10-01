@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="anki-cli-unofficial",
-    version="1.0.2",
+    version="1.0.3",
     author="Julien Sobczak",
     description="A CLI to load flashcards in Anki2",
     long_description=long_description,
